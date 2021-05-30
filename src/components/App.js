@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useCallback } from 'react';
-import { Switch, Route, useHistory } from 'react-router-dom';
+import { BrowserRouter, Switch, Route, useHistory } from 'react-router-dom';
 
 import '../index.css';
 import Header from './Header.js';
@@ -33,7 +33,7 @@ function App() {
   const [email, setEmail] = useState("");
   const [isSuccessAuth, setIsSuccessAuth] = useState(false);
   const [loggedIn, setLoggedIn] = useState(false);
-  const [isToolTipOpened, setIsToolTipOpened] = useState(false);
+  const [isInfoPopupOpen, setIsInfoPopupOpen] = useState(false);
 
 
   // открытие попапа изменения аватара
@@ -66,6 +66,7 @@ function App() {
     setIsEditAvatarPopupOpen(false);
     setEditProfilePopupOpen(false);
     setIsAddPlacePopupOpen(false);
+    setIsInfoPopupOpen(false);
     setSelectedCard({ link: '', name: '', isOpen: false })
   }
 
@@ -152,53 +153,37 @@ function App() {
         console.log(`Ошибка: ${err}`));
   }
 
-  // открытие попапа с информацией о регистрации
-  function openInfoPopup() {
-    setIsToolTipOpened(true);
-  }
-
-  //закрытие попапа с информацией о регистрации
-  function closeInfoPopup() {
-    setIsToolTipOpened(false);
-  }
-
   //регистрация
-  const handleRegister = (data) => {
-    const { password, email } = data;
-    return auth.register({ password, email })
-      .then((res) => {
-        console.log(res);
-        setIsSuccessAuth(true);
-        openInfoPopup();
-        history.push('/sign-in');
-      })
-      .catch((err) => {
-        console.log(`Ошибка: ${err}`)
-        setIsSuccessAuth(false);
-        openInfoPopup();
-      });
+  function handleRegister(password, email) {
 
+    auth.register(password, email)
+      .then((res) => {
+        if (res) {
+          setIsInfoPopupOpen(true);
+          setIsSuccessAuth(true);
+          history.push("/sign-in");
+        } else {
+          setIsInfoPopupOpen(true);
+          setIsSuccessAuth(false);
+        }
+      });
   }
 
   //авторизация
-  const handleLogin = (data) => {
-    const { password, email } = data;
-    auth.authorize({ password, email })
+  function handleLogin(password, email) {
+    auth.authorize(password, email)
       .then((data) => {
-        if (!data) throw new Error('Неверные имя пользователя или пароль');
         if (data.token) {
-          localStorage.setItem('jwt', data.token);
-          tokenCheck();
-          history.push('/');
-        } else {
-          localStorage.removeItem('jwt');
-          history.push('/sign-in');
+          setLoggedIn(true);
+          setEmail(email);
+          history.push("/");
         }
       })
       .catch((err) => {
         console.log(`Ошибка: ${err}`);
+        isInfoPopupOpen(true);
+        setIsSuccessAuth(false);
       });
-
   }
 
   // Выход
@@ -235,30 +220,32 @@ function App() {
 
       <div className="root">
         <Header email={email} loggedIn={loggedIn} signOut={handleSignOut} />
-        <Switch>
-          <Route path="/sign-in">
-            <Login onLogin={handleLogin} />
-          </Route>
-          <Route path="/sign-up">
-            <Register onRegister={handleRegister} />
-          </Route>
+        <BrowserRouter>
+          <Switch>
+            <Route path="/sign-in">
+              <Login onLogin={handleLogin} />
+            </Route>
+            <Route path="/sign-up">
+              <Register onRegister={handleRegister} />
+            </Route>
 
-          <ProtectedRoute
-            path="/"
-            component={Main}
-            loggedIn={loggedIn}
-            isAddPlacePopupOpen={isAddPlacePopupOpen}
-            onEditProfile={handleEditProfileClick}
-            onAddPlace={handleAddPlaceClick}
-            onEditAvatar={handleEditAvatarClick}
-            cards={cards}
-            onCardClick={handleCardClick}
-            onCardDelete={handleCardDelete}
-            onCardLike={handleCardLike}
-            selectedCard={selectedCard}
-          />
+            <ProtectedRoute
+              path="/"
+              component={Main}
+              loggedIn={loggedIn}
+              isAddPlacePopupOpen={isAddPlacePopupOpen}
+              onEditProfile={handleEditProfileClick}
+              onAddPlace={handleAddPlaceClick}
+              onEditAvatar={handleEditAvatarClick}
+              cards={cards}
+              onCardClick={handleCardClick}
+              onCardDelete={handleCardDelete}
+              onCardLike={handleCardLike}
+              selectedCard={selectedCard}
+            />
 
-        </Switch>
+          </Switch>
+        </BrowserRouter>
         <Footer />
         <EditProfilePopup
           isOpen={isEditProfilePopupOpen}
@@ -292,8 +279,8 @@ function App() {
         />
 
         <InfoToolTip
-          isOpen={isToolTipOpened}
-          onClose={closeInfoPopup}
+          isOpen={isInfoPopupOpen}
+          onClose={closeAllPopups}
           auth={isSuccessAuth}
         />
       </div>

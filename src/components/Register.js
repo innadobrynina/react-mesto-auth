@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 
-function Register({ onRegistration }) {
+function Register({ onRegister }) {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
 
@@ -15,7 +15,7 @@ function Register({ onRegistration }) {
 
     function handleSubmit(evt) {
         evt.preventDefault();
-        onRegistration(password, email);
+        onRegister(password, email);
     }
 
     return (
