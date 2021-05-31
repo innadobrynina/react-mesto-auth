@@ -15,7 +15,7 @@ import AddPlacePopup from './AddPlacePopup';
 import Login from './Login';
 import Register from './Register';
 import ProtectedRoute from './ProtectedRoute';
-import InfoToolTip from './InfoTooltip';
+import InfoTooltip from './InfoTooltip';
 import * as auth from '../utils/auth';
 
 function App() {
@@ -34,6 +34,72 @@ function App() {
   const [isSuccessAuth, setIsSuccessAuth] = useState(false);
   const [loggedIn, setLoggedIn] = useState(false);
   const [isInfoPopupOpen, setIsInfoPopupOpen] = useState(false);
+
+
+  //проверка токена
+  const tokenCheck = useCallback(() => {
+    if (localStorage.getItem("token")) {
+      const token = localStorage.getItem("token");
+
+      if (token) {
+        auth.getContent(token)
+          .then(({ data }) => {
+            setEmail(data.email);
+            setLoggedIn(true);
+            history.push("/");
+          })
+          .catch((err) => console.log(err));
+      }
+    }
+  }, [history]);
+
+
+  useEffect(() => {
+    tokenCheck();
+  }, [tokenCheck]);
+
+
+  //регистрация
+  function handleRegister(password, email) {
+
+    auth.register(password, email)
+      .then(() => {
+        setIsInfoPopupOpen(true);
+        setIsSuccessAuth(true);
+        history.push("/sign-in");
+      })
+      .catch((err) => {
+        setIsInfoPopupOpen(true);
+        setIsSuccessAuth(false);
+        console.log(`Ошибка: ${err}`);
+      });
+  }
+
+  //авторизация
+  function handleLogin(password, email) {
+    auth.authorize(password, email)
+      .then((data) => {
+        if (data.token) {
+          setLoggedIn(true);
+          setEmail(email);
+          localStorage.setItem("token", data.token);
+          history.push("/");
+        }
+      })
+      .catch((err) => {
+        setIsInfoPopupOpen(true);
+        setIsSuccessAuth(false);
+        console.log(`Ошибка: ${err}`);
+      });
+  }
+
+  // Выход
+  function handleSignOut() {
+    setLoggedIn(false);
+    localStorage.removeItem("token");
+    history.push("/sign-in");
+  }
+
 
 
   // открытие попапа изменения аватара
@@ -153,67 +219,7 @@ function App() {
         console.log(`Ошибка: ${err}`));
   }
 
-  //регистрация
-  function handleRegister(password, email) {
 
-    auth.register(password, email)
-      .then((res) => {
-        if (res) {
-          setIsInfoPopupOpen(true);
-          setIsSuccessAuth(true);
-          history.push("/sign-in");
-        } else {
-          setIsInfoPopupOpen(true);
-          setIsSuccessAuth(false);
-        }
-      });
-  }
-
-  //авторизация
-  function handleLogin(password, email) {
-    auth.authorize(password, email)
-      .then((data) => {
-        if (data.token) {
-          setLoggedIn(true);
-          setEmail(email);
-          history.push("/");
-        }
-      })
-      .catch((err) => {
-        console.log(`Ошибка: ${err}`);
-        isInfoPopupOpen(true);
-        setIsSuccessAuth(false);
-      });
-  }
-
-  // Выход
-  function handleSignOut() {
-    setLoggedIn(false);
-    localStorage.removeItem("token");
-    history.push("/sign-in");
-  }
-
-
-  //проверка токена
-  const tokenCheck = useCallback(() => {
-    if (localStorage.getItem("token")) {
-      const token = localStorage.getItem("token");
-
-      if (token) {
-        auth.getContent(token).then((res) => {
-          if (res) {
-            setEmail(res.data.email);
-            setLoggedIn(true);
-            history.push("/");
-          }
-        });
-      }
-    }
-  }, [history]);
-
-  useEffect(() => {
-    tokenCheck();
-  }, [tokenCheck]);
 
   return (
     <CurrentUserContext.Provider value={currentUser}>
@@ -242,6 +248,7 @@ function App() {
               onCardDelete={handleCardDelete}
               onCardLike={handleCardLike}
               selectedCard={selectedCard}
+              onClose={closeAllPopups}
             />
 
           </Switch>
@@ -278,7 +285,7 @@ function App() {
           onClose={() => closeAllPopups()}
         />
 
-        <InfoToolTip
+        <InfoTooltip
           isOpen={isInfoPopupOpen}
           onClose={closeAllPopups}
           auth={isSuccessAuth}

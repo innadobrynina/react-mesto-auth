@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import AuthForm from './AuthForm';
 
 
 function Login({ onLogin }) {
@@ -20,29 +21,15 @@ function Login({ onLogin }) {
 
     return (
         <div className="login">
-            <h2 className="login__header">Вход</h2>
-            <form onSubmit={handleSubmit} className="login__form">
-                <input className="login__form-input"
-                    id="email"
-                    required
-                    name="email"
-                    onChange={handleEmailChange}
-                    type="email"
-                    placeholder="Email"
-                    value={email}
-                />
-                <input className="login__form-input"
-                    id="password"
-                    required
-                    name="password"
-                    type="password"
-                    placeholder="Пароль"
-                    onChange={handlePasswordChange}
-                    value={password}
-                />
-
-                <button type="submit" className="login__form-submit-btn">Войти</button>
-            </form>
+            <AuthForm
+                submitButton="Войти"
+                email={email}
+                header="Вход"
+                handleEmailChange={handleEmailChange}
+                handlePasswordChange={handlePasswordChange}
+                handleSubmit={handleSubmit}
+                password={password}
+            />
         </div>
     )
 }

@@ -1,4 +1,4 @@
-.login__form-input {
+.form__input {
     border:none;
     background: none;
     border-bottom: 2px solid #CCCCCC;
@@ -11,11 +11,13 @@
   color: #FFFFFF;
 }
 
-.login__form-input:focus {
+.form__input:focus {
   outline: 0;
 }
 
-.login__form-input:last-of-type {
-    margin-bottom: 216px;
+.form__input::placeholder {
+  font-family: inherit;
+  font-size: 14px;
+  line-height: 17px;
+  color: #bcbcc4;
 }
-
