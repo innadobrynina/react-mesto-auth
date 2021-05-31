@@ -226,7 +226,7 @@ function App() {
 
       <div className="root">
         <Header email={email} loggedIn={loggedIn} signOut={handleSignOut} />
-        <BrowserRouter>
+        <BrowserRouter >
           <Switch>
             <Route path="/sign-in">
               <Login onLogin={handleLogin} />
