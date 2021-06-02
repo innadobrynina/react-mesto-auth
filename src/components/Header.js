@@ -1,37 +1,50 @@
+import React from 'react';
 import headerLogo from "../images/logo.svg";
-import { BrowserRouter, Link, Route, Switch } from 'react-router-dom';
+import { Link, BrowserRouter } from 'react-router-dom';
 
 
-function Header({ email, loggedIn, signOut }) {
 
+function Header({
+    loggedIn,
+    userData,
+    handleSignout,
+    linkText,
+    redirectPath,
+    handleMenuClick,
+    isOpen
+}) {
+
+    const headerClassName = (
+        `header ${loggedIn && 'header_type_mobile'}`
+    );
+
+    const menuClassName = (
+        `menu ${loggedIn && 'menu_type_mobile'} ${isOpen && 'menu_opened'}`
+    );
+
+    const buttonClassName = (
+        `button button_type_menu ${isOpen && 'button_type_menu_active'}`
+    );
     return (
-        <div className="header">
+        <div className={headerClassName}>
             <img src={headerLogo} className="header__logo" alt="Логотип" />
-            {loggedIn ? (
+            <div className="header__container">
+                <BrowserRouter>
+                    <nav className={menuClassName}>
+                        {/* <address className="header__address">{userData.email}</address> */}
+                        {loggedIn && <p className="header__user-info">{userData.email}</p>}
+                        {loggedIn ?
+                            <Link className="header__link"
+                                to="sign-in"
+                                onClick={handleSignout}>Выйти</Link>
+                            :
+                            <Link className="header__link" to={redirectPath}>{linkText}</Link>}
 
-                <div className="header__container">
-                    <>
-                        <address className="header__address">{email}</address>
-                        <p className="header__user-info"></p>
-                        <nav className="header__navigation">
-                            <button to="" className="header__link header__button" type="button" onClick={signOut}>Выйти</button>
-                        </nav>
-                    </>
-                </div>
+                        {loggedIn && <button className={buttonClassName} onClick={handleMenuClick}></button>}
 
-            ) : (
-                <BrowserRouter >
-                    <Switch>
-                        <Route path="/sign-up">
-                            <Link to="/sign-in" className="header__link">Войти</Link>
-                        </Route>
-                        <Route path="/sign-in">
-                            <Link to="/sign-up" className="header__link">Регистрация</Link>
-                        </Route>
-                    </Switch>
-                </BrowserRouter >
-            )
-            }
+                    </nav>
+                </BrowserRouter>
+            </div>
         </div>
     )
 }

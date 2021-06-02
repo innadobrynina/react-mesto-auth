@@ -4,12 +4,7 @@ class Api {
         this._headers = headers;
     }
 
-    _checkResponse(res) {
-        if (res.ok) {
-            return res.json();
-        }
-        return Promise.reject(`Ошибка ${res.status}`);
-    }
+    _checkResponse = res => res.ok ? res.json() : Promise.reject(`Ошибка ${res.status}`);
 
     getCards() {
         return fetch(`${this._baseUrl}/cards`, {

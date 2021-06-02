@@ -2,30 +2,25 @@ import React from 'react';
 import successIcon from '../images/success.svg';
 import failIcon from '../images/fail.svg';
 
-function InfoTooltip(props) {
-    const className = props.isOpen ? `popup_fade-in` : `popup_fade-out`;
+function InfoTooltip({ onClose, isOpen, isSuccess }) {
+    const image = isSuccess ? successIcon : failIcon;
+    const caption = isSuccess ? 'Вы успешно зарегистрировались!' : 'Что-то пошло не так! Попробуйте ещё раз.';
+
     return (
-        <div className={`popup popup_${props.name} ${className}`}>
-            <div className={`popup__container popup__container_${props.name}`}>
-                <button type="button"
-                    className={`popup__close-button popup__close-button_${props.name}`}
-                    onClick={props.onClose}>
+        <div className={`popup ${isOpen ? 'popup_opened' : ''}`} onClick={onClose}>
+            <div className="popup__container" onClick={e => e.stopPropagation()}>
 
-                </button>
-                <img
-                    className="popup__icon"
-                    src={props.isSuccessAuth ? successIcon : failIcon}
-                    alt={props.isSuccessAuth
-                        ? "иконка успешной регистрации"
-                        : "иконка не успешной регистрации"}>
-
-                </img>
-                <p className="popup__text">{props.isSuccessAuth
-                    ? 'Вы успешно зарегистрировались!'
-                    : 'Что-то пошло не так! Попробуйте еще раз.'}</p>
+                <div className="info">
+                    <img className="info__image" src={image} alt={caption} />
+                    <p className="info__caption">{caption}</p>
+                    <button type="reset"
+                        className="popup__close-button"
+                        onClick={onClose}>
+                    </button>
+                </div>
             </div>
         </div>
-    )
-}
+    );
+};
 
 export default InfoTooltip;

@@ -1,42 +1,29 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Link } from 'react-router-dom';
 import AuthForm from './AuthForm';
+import Header from './Header';
 
-function Register({ onRegister }) {
-    const [email, setEmail] = useState("");
-    const [password, setPassword] = useState("");
-
-    function handleEmailChange(evt) {
-        setEmail(evt.target.value);
-    }
-
-    function handlePasswordChange(evt) {
-        setPassword(evt.target.value);
-    }
-
-    function handleSubmit(evt) {
-        evt.preventDefault();
-        onRegister(password, email);
-    }
+function Register({ handleRegister, isLoading }) {
 
     return (
-        <div className="register">
-            <AuthForm
-                submitButton="Зарегистрироваться"
-                email={email}
-                header="Регистрация"
-                handleEmailChange={handleEmailChange}
-                handlePasswordChange={handlePasswordChange}
-                handleSubmit={handleSubmit}
-                password={password}
-            />
+        <>
+            <Header linkText='Войти' redirectPath='/sign-in' />
+            <div className="auth">
+                <h1 className="auth__header">Регистрация</h1>
+                <AuthForm
+                    handleAuth={handleRegister}
+                    isLoading={isLoading}
+                    buttonText='Зарегистрироваться'
+                />
+                <div className="auth__signin">
+                    <p className="auth__signin-caption">
+                        Уже зарегистрированы?&nbsp;</p>
+                    <Link to="/sign-in" className="auth__login-link">Войти</Link>
 
-            <p className="register__footer">
-                Уже зарегистрированы?&nbsp;
-        <Link to="/sign-in" className="register__footer-link">Войти</Link>
-            </p>
-        </div>
-    )
-}
+                </div>
+            </div>
+        </>
+    );
+};
 
 export default Register;

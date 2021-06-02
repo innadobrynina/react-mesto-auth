@@ -95,3 +95,13 @@
 @import url(./blocks/form/__input/_type/form__input_type_auth.css);
 @import url(./blocks/form/__header/form__header.css);
 @import url(./blocks/form/__header/_type/form__header_type_auth.css);
+@import url(./blocks/auth/__header/auth__header.css);
+@import url(./blocks/auth/__login-link/auth__login-link.css);
+@import url(./blocks/auth/__signin-caption/auth__signin-caption.css);
+@import url(./blocks/auth/__signin/auth__signin.css);
+@import url(./blocks/auth/auth.css);
+@import url(./blocks/menu/menu.css);
+@import url(./blocks/menu/_type/menu_type.css);
+@import url(./blocks/menu/_opened/menu_opened.css);
+@import url(./blocks/menu/__user-info/menu__user-info.css);
+@import url(./blocks/menu/__link/menu__link.css);
