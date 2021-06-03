@@ -7,3 +7,10 @@
   text-align: center;
   color: #FFFFFF;
 }
+
+@media screen and (max-width: 475px) {
+  .auth__header {
+    font-size: 20px;
+    line-height: 1.2;
+  }
+}

@@ -1,29 +1,60 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import AuthForm from './AuthForm';
-import Header from './Header';
+import Form from './Form';
+import AuthInput from './AuthInput';
+import SubmitButton from './SubmitButton.js';
 
-function Register({ handleRegister, isLoading }) {
+function Register({ onRegister }) {
 
+    const [inputValue, setInputValue] = React.useState({
+        email: '',
+        password: ''
+    });
+
+    function handleInputChange(e) {
+        const { name, value } = e.target;
+        setInputValue({
+            ...inputValue,
+            [name]: value,
+        });
+    }
+
+
+    function handleSubmit(e) {
+        e.preventDefault();
+        const { email, password } = inputValue;
+        onRegister(email, password);
+    }
     return (
         <>
-            <Header linkText='Войти' redirectPath='/sign-in' />
-            <div className="auth">
-                <h1 className="auth__header">Регистрация</h1>
-                <AuthForm
-                    handleAuth={handleRegister}
-                    isLoading={isLoading}
-                    buttonText='Зарегистрироваться'
+            <Form
+                title="Регистрация"
+                onSubmit={handleSubmit}
+                text={"Уже зарегистрированы?"}
+                link={<Link className="auth__link opacity" to="/sign-in">Войти</Link>}
+            >
+                <AuthInput
+                    type="email"
+                    placeholder="Email"
+                    value={inputValue.email}
+                    name="email"
+                    onChange={handleInputChange}
                 />
-                <div className="auth__signin">
-                    <p className="auth__signin-caption">
-                        Уже зарегистрированы?&nbsp;</p>
-                    <Link to="/sign-in" className="auth__login-link">Войти</Link>
-
-                </div>
-            </div>
+                <AuthInput
+                    type="password"
+                    placeholder="Пароль"
+                    value={inputValue.password}
+                    name="password"
+                    onChange={handleInputChange}
+                />
+                <SubmitButton
+                    button="Зарегистрироваться"
+                    classname="auth"
+                >
+                </SubmitButton>
+            </Form>
         </>
     );
-};
+}
 
 export default Register;

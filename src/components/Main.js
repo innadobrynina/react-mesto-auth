@@ -25,7 +25,7 @@ function Main({
             <Header
                 loggedIn={loggedIn}
                 userData={userData}
-                handleSignout={handleSignOut}
+                handleSignOut={handleSignOut}
                 isOpen={isMenuOpen}
                 handleMenuClick={onMenuClick}
             />

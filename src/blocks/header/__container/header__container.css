@@ -1,4 +1,6 @@
 .header__container {
-    display: flex;
-    margin-bottom: 41px;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
 }

@@ -80,7 +80,21 @@
 @import url(./blocks/header/__link/header__link.css);
 @import url(./blocks/header/__address/header__address.css);
 @import url(./blocks/header/__navigation/header__navigation.css);
-@import url(./blocks/header/__button-out/header__button-out.css);
+@import url(./blocks/header/__button-close/header__button-close.css);
+@import url(./blocks/header/__button-open/header__button-open.css);
+@import url(./blocks/header/__email/header__email.css);
+@import url(./blocks/header/__menu/_visible/header__menu_visible.css);
+@import url(./blocks/header/__menu/header__menu.css);
+@import url(./blocks/header/__email/header__email.css);
+@import url(./blocks/header/__email/_menu/header__email_menu.css);
+@import url(./blocks/header/__link/header__link.css);
+@import url(./blocks/header/__link/_menu/header__link_menu.css);
+@import url(./blocks/auth/__info/auth__info.css);
+@import url(./blocks/auth/__text/auth__text.css);
+@import url(./blocks/auth/__form/auth__form.css);
+@import url(./blocks/auth/__item/auth__item.css);
+
+
 @import url(./blocks/register/register.css);
 @import url(./blocks/register/__footer/register__footer.css);
 @import url(./blocks/register/__footer-link/register__footer-link.css);
@@ -96,12 +110,15 @@
 @import url(./blocks/form/__header/form__header.css);
 @import url(./blocks/form/__header/_type/form__header_type_auth.css);
 @import url(./blocks/auth/__header/auth__header.css);
-@import url(./blocks/auth/__login-link/auth__login-link.css);
-@import url(./blocks/auth/__signin-caption/auth__signin-caption.css);
-@import url(./blocks/auth/__signin/auth__signin.css);
+
+
+@import url(./blocks/auth/__form/auth__form.css);
 @import url(./blocks/auth/auth.css);
 @import url(./blocks/menu/menu.css);
 @import url(./blocks/menu/_type/menu_type.css);
 @import url(./blocks/menu/_opened/menu_opened.css);
 @import url(./blocks/menu/__user-info/menu__user-info.css);
 @import url(./blocks/menu/__link/menu__link.css);
+@import url(./blocks/info/info.css);
+@import url(./blocks/info/__image/info__image.css);
+@import url(./blocks/info/__caption/info__caption.css);

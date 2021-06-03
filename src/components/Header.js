@@ -1,51 +1,53 @@
 import React from 'react';
 import headerLogo from "../images/logo.svg";
-import { Link, BrowserRouter } from 'react-router-dom';
+import { Route, Switch, Link, BrowserRouter } from 'react-router-dom';
 
 
 
-function Header({
-    loggedIn,
-    userData,
-    handleSignout,
-    linkText,
-    redirectPath,
-    handleMenuClick,
-    isOpen
-}) {
+function Header({ email, onClick, loggedIn }) {
 
-    const headerClassName = (
-        `header ${loggedIn && 'header_type_mobile'}`
-    );
+    const [isOpen, setIsOpen] = React.useState(true);
+    const [isClicked, setIsClicked] = React.useState(false);
 
-    const menuClassName = (
-        `menu ${loggedIn && 'menu_type_mobile'} ${isOpen && 'menu_opened'}`
-    );
+    const linkClassName = "header__link";
 
-    const buttonClassName = (
-        `button button_type_menu ${isOpen && 'button_type_menu_active'}`
-    );
+    const handleClick = () => {
+        setIsOpen(!isOpen);
+        setIsClicked(!isClicked);
+    };
+
     return (
-        <div className={headerClassName}>
-            <img src={headerLogo} className="header__logo" alt="Логотип" />
-            <div className="header__container">
-                <BrowserRouter>
-                    <nav className={menuClassName}>
-                        {/* <address className="header__address">{userData.email}</address> */}
-                        {loggedIn && <p className="header__user-info">{userData.email}</p>}
-                        {loggedIn ?
-                            <Link className="header__link"
-                                to="sign-in"
-                                onClick={handleSignout}>Выйти</Link>
-                            :
-                            <Link className="header__link" to={redirectPath}>{linkText}</Link>}
+        <>
+            {loggedIn && <div className={`header__menu ${isOpen ? `` : `header__menu_visible`}`}>
+                <p className="header__email_menu">{email}</p>
+                <Link onClick={onClick} className="header__link_menu">Выйти</Link>
+            </div>}
 
-                        {loggedIn && <button className={buttonClassName} onClick={handleMenuClick}></button>}
-
-                    </nav>
-                </BrowserRouter>
+            <div className="header">
+                <img src={headerLogo} className="header__logo" alt="Логотип" />
+                <div className="header__container">
+                    <BrowserRouter>
+                        <Switch>
+                            <Route path="/sign-in">
+                                <Link to="/sign-up" className={linkClassName}>Регистрация</Link>
+                            </Route>
+                            <Route path="/sign-up">
+                                <Link to="/sign-in" className={linkClassName}>Войти</Link>
+                            </Route>
+                            <Route path="/">
+                                <button className={`header__button 
+                ${isClicked ? 'header__button-close' : 'header__button-open'}`}
+                                    onClick={handleClick}
+                                >
+                                </button>
+                                <p className="header__email">{email}</p>
+                                <Link onClick={onClick} className="header__link opacity">Выйти</Link>
+                            </Route>
+                        </Switch>
+                    </BrowserRouter>
+                </div>
             </div>
-        </div>
+        </>
     )
 }
 export default Header;
