@@ -1,8 +1,13 @@
 .popup-image__container {
-    position: absolute;
-    top: 50%;
+    margin: 0;
+    position: fixed;
+    max-width: 75vw;
+    width: auto;
+    max-height: 75vh;
+    height: auto;
     left: 50%;
-    transition: .2s;
-    transform: translate(-50%, -50%);
-    box-sizing: border-box;
+    top: 50%;
+    transform: translate(-50%,-50%);
+    background: none;
+    border-radius: 0;
 }

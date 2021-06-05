@@ -53,7 +53,7 @@ function EditProfilePopup({ onUpdateUser, isOpen, onClose, onClick }) {
 
     return (
         <Popup
-            name='profile'
+            name='edit'
             classname="popup__container"
             isOpen={isOpen}
             onClose={onClose}

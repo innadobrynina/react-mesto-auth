@@ -1,10 +1,9 @@
 .popup-image__content {
-    display: flex;
-    max-height: 75vh;
+ max-height: 75vh;
     max-width: 75vw;
-    position: relative;
+    display: flex;
+     position: relative;
 }
-
 @media screen and (max-width: 700px) {
     .popup-image__content {
         width: auto;
