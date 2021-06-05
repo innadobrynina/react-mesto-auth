@@ -16,12 +16,12 @@ function Popup({ onClose, isOpen, name, classname, children }) {
     }, [isOpen]);
 
     return (
-        <section className={`popup popup_type_${name} ${isOpen ? "popup_open" : ""}`}>
+        <section className={`popup popup_type_${name} ${isOpen ? "popup_opened" : ""}`}>
             <div className={classname}>
                 <button
                     type="button"
                     aria-label="закрыть модальное окно"
-                    className="button popup__close opacity"
+                    className="popup__close"
                     onClick={onClose}>
                 </button>
                 {children}

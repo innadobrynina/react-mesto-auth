@@ -1,7 +1,7 @@
 import React from 'react';
 import Form from './Form';
 import AuthInput from './AuthInput';
-import SubmitButton from './SubmitButton.js';
+import SubmitButton from './SubmitButton';
 
 function Login({ onLoggin }) {
     const [inputValue, setInputValue] = React.useState({

@@ -1,9 +1,9 @@
 .auth__form {
   display: flex;
   flex-direction: column;
-  max-width: 358px;
-  margin: auto;
   margin-top: 50px;
+  width: 358px;
+  margin: 50px auto auto;
 }
 
 @media screen and (max-width: 475px) {

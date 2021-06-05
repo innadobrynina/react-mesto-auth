@@ -31,7 +31,7 @@ function Register({ onRegister }) {
                 title="Регистрация"
                 onSubmit={handleSubmit}
                 text={"Уже зарегистрированы?"}
-                link={<Link className="auth__link opacity" to="/sign-in">Войти</Link>}
+                link={<Link className="auth__link" to="/sign-in">Войти</Link>}
             >
                 <AuthInput
                     type="email"

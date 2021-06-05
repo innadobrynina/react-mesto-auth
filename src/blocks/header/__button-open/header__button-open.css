@@ -4,3 +4,8 @@
   width: 24px;
   height: 21px;
 }
+
+.header__button-open:hover {
+    opacity: 0.6;
+    transition: opacity .5s linear;
+}

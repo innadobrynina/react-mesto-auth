@@ -1,32 +1,34 @@
 import React, { useEffect, useState } from 'react';
-import { Route, Switch, Redirect, useHistory, BrowserRouter } from 'react-router-dom';
-
-import '../index.css';
+import { Route, Switch, Redirect, useHistory } from 'react-router-dom';
+import Header from './Header';
 import Main from './Main.js';
 import Footer from './Footer.js';
 import ImagePopup from './ImagePopup';
+import { api } from '../utils/api';
+import * as auth from '../utils/auth';
 import { CurrentUserContext } from '../contexts/CurrentUserContext';
-import api from '../utils/api';
-import Header from './Header';
+
 import EditProfilePopup from './EditProfilePopup';
 import EditAvatarPopup from './EditAvatarPopup';
 import AddPlacePopup from './AddPlacePopup';
+import ConfirmPopup from './ConfirmPopup';
 import Login from './Login';
 import Register from './Register';
 import ProtectedRoute from './ProtectedRoute';
 import InfoTooltip from './InfoTooltip';
-import * as auth from '../utils/auth';
-import ConfirmPopup from './ConfirmPopup';
+
+
 
 function App() {
   const [isEditAvatarPopupOpen, setIsEditAvatarPopupOpen] = useState(false);
-  const [isEditProfilePopupOpen, setEditProfilePopupOpen] = useState(false);
+  const [isEditProfilePopupOpen, setIsEditProfilePopupOpen] = useState(false);
   const [isAddPlacePopupOpen, setIsAddPlacePopupOpen] = useState(false);
   const [isImagePopupOpen, setIsImagePopupOpen] = useState(false);
   const [isDeletePopupOpen, setDeletePopupOpen] = useState(false);
   const [isMessagePopupOpen, setMessagePopupOpen] = useState(false);
+
   const [selectedCard, setSelectedCard] = useState({});
-  const [isLoading, setLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const [currentUser, setCurrentUser] = useState({});
   const [cards, setCards] = useState([]);
   const [loggedIn, setLoggedIn] = useState(false);
@@ -50,26 +52,27 @@ function App() {
   //лайк карточки
   function handleCardLike(card) {
     // Определяем, есть ли у карточки лайк, поставленный текущим пользователем
-    const isLiked = card.likes.some(i => i._id === currentUser._id);
-
-    api.changeLikeCardStatus(card._id, !isLiked)
+    const isLiked = card.likes.some(like => like._id === currentUser._id);
+    api.changeLikeStatus(card._id, !isLiked)
       .then((newCard) => {
-        setCards((state) => state.map((c) => c._id === card._id ? newCard : c));
+        const newCards = cards.map((c) => c._id === card._id ? newCard : c);
+        setCards(newCards);
       })
-      .catch((err) =>
-        console.log(`Ошибка: ${err}`));
+      .catch(err => {
+        console.log(`Ошибка: ${err}`);
+      })
   }
-
   //удаление карточки
   function handleCardDelete(card) {
     api.deleteCard(card._id)
       .then(() => {
-        // Определяем, являемся ли мы владельцем текущей карточки
         const newCards = cards.filter((c) => c._id !== card._id);
         setCards(newCards);
+        closeAllPopups()
       })
-      .catch((err) =>
-        console.log(`Ошибка: ${err}`));
+      .catch(err => {
+        console.log(`Ошибка: ${err}`);
+      })
   }
 
 
@@ -81,6 +84,7 @@ function App() {
   // открытие попапа картинки
   function handleCardClick(card) {
     setSelectedCard(card);
+    setIsImagePopupOpen(true);
   }
 
 
@@ -90,7 +94,7 @@ function App() {
   }
   // открытие попапа изменения данных пользователя
   function handleEditProfileClick() {
-    setEditProfilePopupOpen(true);
+    setIsEditProfilePopupOpen(true);
   }
 
   // открытие попапа добавления картинки
@@ -102,7 +106,7 @@ function App() {
   // закрытие попапов
   function closeAllPopups() {
     setIsEditAvatarPopupOpen(false);
-    setEditProfilePopupOpen(false);
+    setIsEditProfilePopupOpen(false);
     setIsAddPlacePopupOpen(false);
     setIsImagePopupOpen(false);
     setDeletePopupOpen(false);
@@ -111,39 +115,40 @@ function App() {
   }
 
   //обновление данных пользователя
-  function handleUpdateUser(currentUser) {
-    setLoading(true)
-    api.setUserInfo(currentUser)
-      .then((results) => {
-        setCurrentUser(results);
-        closeAllPopups()
+  function handleUpdateUser(data) {
+    setIsLoading(true)
+    api.setUserData(data)
+      .then((result) => {
+        setCurrentUser(result);
+        closeAllPopups();
       })
-      .catch((err) =>
-        console.log(`Ошибка: ${err}`))
+      .catch((err) => {
+        console.log(`Ошибка: ${err}`);
+      })
       .finally(() => {
-        setLoading(false);
+        setIsLoading(false);
       });
   }
 
   // обновление аватара
-  function handleUpdateAvatar(avatar) {
-    setLoading(true)
-    api.updateAvatar(avatar)
-      .then((avatar) => {
-        setCurrentUser(avatar);
+  function handleUpdateAvatar(data) {
+    setIsLoading(true)
+    api.setUserAvatarData(data)
+      .then((result) => {
+        setCurrentUser(result);
         closeAllPopups()
       })
       .catch((err) =>
         console.log(`Ошибка: ${err}`))
       .finally(() => {
-        setLoading(false);
+        setIsLoading(false);
       });
   }
 
   // добавление новой карточки через форму
-  function handleAddPlaceSubmit(currentUser) {
-    setLoading(true)
-    api.createCard(currentUser)
+  function handleAddPlaceSubmit(card) {
+    setIsLoading(true)
+    api.postNewCard(card)
       .then((results) => {
         setCards([results, ...cards]);
         closeAllPopups()
@@ -151,7 +156,7 @@ function App() {
       .catch((err) =>
         console.log(`Ошибка: ${err}`))
       .finally(() => {
-        setLoading(false);
+        setIsLoading(false);
       });
   }
 
@@ -171,7 +176,7 @@ function App() {
         setMessagePopupOpen(true);
         setIsSuccessful(false);
         if (err === 400) {
-          return console.log('некорректно заполнено одно из полей');
+          return console.log('Некорректно заполнено одно из полей');
         }
       })
   }
@@ -194,17 +199,16 @@ function App() {
         setMessagePopupOpen(true);
         setIsSuccessful(false);
         if (err === 400) {
-          return console.log('не передано одно из полей');
+          return console.log('Не передано одно из полей');
         }
         if (err === 401) {
-          return console.log('пользователь с email не найден');
+          return console.log('Пользователь с email не найден');
         }
       })
   }
 
 
   function tokenCheck() {
-
     const token = localStorage.getItem('token');
     if (token) {
       auth.checkToken(token)
@@ -234,15 +238,17 @@ function App() {
 
 
   return (
-    <CurrentUserContext.Provider value={currentUser}>
+    <div className="root">
+      <CurrentUserContext.Provider value={currentUser}>
 
-      <div className="root">
-        <Header
-          email={email}
-          onClick={handleSignOut}
-          loggedIn={loggedIn}
-        />
-        <BrowserRouter>
+        <div className="container">
+
+          <Header
+            email={email}
+            onClick={handleSignOut}
+            loggedIn={loggedIn}
+          />
+
           <Switch>
 
             <ProtectedRoute exact path='/' loggedIn={loggedIn}>
@@ -271,52 +277,51 @@ function App() {
               {loggedIn ? <Redirect to="/" /> : <Redirect to="/sign-in" />}
             </Route>
           </Switch>
-        </BrowserRouter>
-      </div>
+        </div>
 
-      <EditProfilePopup
-        isOpen={isEditProfilePopupOpen}
-        onClose={closeAllPopups}
-        onUpdateUser={handleUpdateUser}
-        onClick={isLoading}
-      />
+        <EditProfilePopup
+          isOpen={isEditProfilePopupOpen}
+          onClose={closeAllPopups}
+          onUpdateUser={handleUpdateUser}
+          onClick={isLoading}
+        />
 
-      <AddPlacePopup
-        onClick={isLoading}
-        isOpen={isAddPlacePopupOpen}
-        onClose={closeAllPopups}
-        onAddPlace={handleAddPlaceSubmit}
-      />
+        <AddPlacePopup
+          onClick={isLoading}
+          isOpen={isAddPlacePopupOpen}
+          onClose={closeAllPopups}
+          onAddPlace={handleAddPlaceSubmit}
+        />
 
-      <EditAvatarPopup
-        isOpen={isEditAvatarPopupOpen}
-        onClose={closeAllPopups}
-        onUpdateAvatar={handleUpdateAvatar}
-        onClick={isLoading}
-      />
+        <EditAvatarPopup
+          isOpen={isEditAvatarPopupOpen}
+          onClose={closeAllPopups}
+          onUpdateAvatar={handleUpdateAvatar}
+          onClick={isLoading}
+        />
 
-      <ConfirmPopup
-        isOpen={isDeletePopupOpen}
-        onClose={closeAllPopups}
-        onDelete={handleCardDelete}
-        card={selectedCard}
-      />
+        <ConfirmPopup
+          isOpen={isDeletePopupOpen}
+          onClose={closeAllPopups}
+          onDelete={handleCardDelete}
+          card={selectedCard}
+        />
 
-      <ImagePopup
-        card={selectedCard}
-        isOpen={isImagePopupOpen}
-        onClose={closeAllPopups}
-      />
+        <ImagePopup
+          card={selectedCard}
+          isOpen={isImagePopupOpen}
+          onClose={closeAllPopups}
+        />
 
-      <InfoTooltip
-        isOpen={isMessagePopupOpen}
-        isSuccess={isSuccessful}
-        message={message}
-        onClose={closeAllPopups}
-      />
+        <InfoTooltip
+          isOpen={isMessagePopupOpen}
+          isSuccess={isSuccessful}
+          message={message}
+          onClose={closeAllPopups}
+        />
 
-    </CurrentUserContext.Provider>
-
+      </CurrentUserContext.Provider>
+    </div>
   );
 }
 
