@@ -1,6 +1,5 @@
 import React from 'react';
-import Popup from './Popup';
-import SubmitButton from './SubmitButton.js';
+import PopupWithForm from './PopupWithForm';
 
 function AddPlacePopup({ onClick, onAddPlace, isOpen, onClose }) {
 
@@ -40,19 +39,17 @@ function AddPlacePopup({ onClick, onAddPlace, isOpen, onClose }) {
   }, [isOpen])
 
   return (
-    <Popup
-      classname="popup__container"
+    <PopupWithForm
       isOpen={isOpen}
       onClose={onClose}
-    >
-      <h3 className="popup__title">Новое место</h3>
-      <form
-        onSubmit={handleSubmit}
-        className="popup__form"
-        action="#"
-        method="POST"
-        noValidate
-      >
+      title="Новое место"
+      onSubmit={handleSubmit}
+      formClassName="popup__form"
+      submitButtonClassName="popup"
+      isDisabled={!isFormValid}
+      submitButtonText="Создать"
+      onClick={onClick}
+      children={(<>
         <label className="popup__field">
           <input
             className="popup__input popup__input_place"
@@ -67,7 +64,7 @@ function AddPlacePopup({ onClick, onAddPlace, isOpen, onClose }) {
             onChange={handleInputChange}
 
           />
-          <span className="popup__input-error popup__input-error_place" id="place-name-error"></span>
+          <span className={!isValid.name ? "popup__input-error popup__input-error_place" : ""} id="place-name-error">{validationMessage.name}</span>
         </label>
         <label className="popup__field">
           <input
@@ -81,21 +78,12 @@ function AddPlacePopup({ onClick, onAddPlace, isOpen, onClose }) {
             onChange={handleInputChange}
 
           />
-          <span className="popup__input-error popup__input-error_image" id="link-image-error">
-            {validationMessage.link}
-          </span>
+          <span className={!isValid.link ? "popup__input-error popup__input-error_image" : ""} id="link-image-error">{validationMessage.link}</span>
         </label>
-        <SubmitButton
-          classname="popup"
-          isDisabled={!isFormValid}
-          button="Создать"
-          onClick={onClick}
-        >
-        </SubmitButton>
-      </form>
-    </Popup>
+      </>)}
+    >
+    </PopupWithForm>
   )
-
 }
 
 export default AddPlacePopup;

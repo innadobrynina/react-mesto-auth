@@ -1,17 +1,21 @@
 
 import React, { useEffect } from 'react';
 
-function Popup({ onClose, isOpen, name, classname, children }) {
+function Popup({ onClose, isOpen, name, classname, children, submitButtonClass, isDisabled, onClick, button }) {
 
-    function handleEsc(event) {
-        if (event.key !== 'Escape') {
-            return
-        }
-        onClose();
-    }
 
     useEffect(() => {
-        document.addEventListener('keydown', handleEsc);
+        function handleEsc(event) {
+            if (event.key !== 'Escape') {
+                return
+            }
+            onClose();
+        }
+
+        if (isOpen) {
+            document.addEventListener('keydown', handleEsc);
+        }
+
         return () => document.removeEventListener('keydown', handleEsc);
     }, [isOpen]);
 

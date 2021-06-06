@@ -1,9 +1,7 @@
 import React from 'react';
-import Popup from './Popup';
-import SubmitButton from './SubmitButton.js';
+import PopupWithForm from './PopupWithForm';
 
-
-function ConfirmPopup({ card, onDelete, isOpen, onClose }) {
+function ConfirmPopup({ onClick, card, onDelete, isOpen, onClose }) {
 
     function handleSubmit(event) {
         event.preventDefault();
@@ -11,26 +9,18 @@ function ConfirmPopup({ card, onDelete, isOpen, onClose }) {
     }
 
     return (
-        <Popup
+        <PopupWithForm
+            title="Вы уверены?"
             name="delete"
-            classname="popup__container"
             isOpen={isOpen}
             onClose={onClose}
+            onSubmit={handleSubmit}
+            formClassName="popup__form"
+            submitButtonText="Да"
+            submitButtonClassName="popup"
+            onClick={onClick}
         >
-            <h3 className="popup__title">Вы уверены?</h3>
-            <form
-                onSubmit={handleSubmit}
-                className="popup__form"
-                action="#"
-                method="POST"
-                noValidate>
-                <SubmitButton
-                    classname="popup"
-                    button="Да"
-                >
-                </SubmitButton>
-            </form>
-        </Popup>
+        </PopupWithForm>
     )
 }
 

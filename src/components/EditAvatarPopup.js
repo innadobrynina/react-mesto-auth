@@ -1,8 +1,5 @@
 import React from 'react';
-import Popup from './Popup';
-import SubmitButton from './SubmitButton';
-
-
+import PopupWithForm from './PopupWithForm';
 
 function EditAvatarPopup({ isOpen, onClose, onUpdateAvatar, onClick }) {
     const avatarRef = React.useRef('');
@@ -39,45 +36,33 @@ function EditAvatarPopup({ isOpen, onClose, onUpdateAvatar, onClick }) {
 
 
     return (
-        <Popup
-            classname="popup__container"
+        <PopupWithForm
+            formClassName="popup__form"
             isOpen={isOpen}
             onClose={onClose}
             name='update-avatar'
-            buttonText='Обновить'
+            submitButtonText='Обновить'
+            onSubmit={handleSubmit}
+            submitButtonClassName="popup"
+            isDisabled={!isFormValid}
+            onClick={onClick}
+            title="Обновить аватар"
+            children={(<label className="popup__field">
+                <input
+                    id="avatar-link"
+                    type="url"
+                    name="avatar"
+                    className="popup__input"
+                    placeholder="Ссылка на аватар"
+                    required
+                    aria-label="Ссылка на аватар"
+                    ref={avatarRef}
+                    onChange={handleChange}
+                />
+                <span className={isValid ? " popup__input-error_avatar" : ""} id="avatar-link-error">{validationMessage}</span>
+            </label>)}
         >
-            <h3 className="popup__title">Обновить аватар</h3>
-            <form
-                onSubmit={handleSubmit}
-                className="popup__form"
-                action="#"
-                method="POST"
-                noValidate
-            >
-
-                <label className="popup__field">
-                    <input
-                        id="avatar-link"
-                        type="url"
-                        name="avatar"
-                        className="popup__input"
-                        placeholder="Ссылка на аватар"
-                        required
-                        aria-label="Ссылка на аватар"
-                        ref={avatarRef}
-                        onChange={handleChange}
-                    />
-                    <span className={isValid ? " popup__input-error_avatar" : ""} id="avatar-link-error">{validationMessage}</span>
-                </label>
-                <SubmitButton
-                    classname="popup"
-                    isDisabled={!isFormValid}
-                    button="Сохранить"
-                    onClick={onClick}
-                >
-                </SubmitButton>
-            </form>
-        </Popup>
+        </PopupWithForm>
     );
 }
 

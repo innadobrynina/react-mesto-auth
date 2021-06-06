@@ -5,7 +5,7 @@ function SubmitButton({ classname, isDisabled, onClick, button }) {
     return (
         <button
             type="submit"
-            className={`button ${classname}__button-submit ${isDisabled ? 'popup__button-submit_disabled' : ''}`}
+            className={`${classname}__button-submit ${isDisabled ? 'popup__button-submit_disabled' : ''}`}
             disabled={isDisabled}
         >
             {onClick ? "Сохранение..." : button}

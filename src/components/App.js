@@ -64,6 +64,7 @@ function App() {
   }
   //удаление карточки
   function handleCardDelete(card) {
+    setIsLoading(true)
     api.deleteCard(card._id)
       .then(() => {
         const newCards = cards.filter((c) => c._id !== card._id);
@@ -73,6 +74,9 @@ function App() {
       .catch(err => {
         console.log(`Ошибка: ${err}`);
       })
+      .finally(() => {
+        setIsLoading(false);
+      });
   }
 
 
@@ -111,7 +115,7 @@ function App() {
     setIsImagePopupOpen(false);
     setDeletePopupOpen(false);
     setMessagePopupOpen(false);
-    setSelectedCard();
+    setSelectedCard({});
   }
 
   //обновление данных пользователя
@@ -305,6 +309,7 @@ function App() {
           onClose={closeAllPopups}
           onDelete={handleCardDelete}
           card={selectedCard}
+          onClick={isLoading}
         />
 
         <ImagePopup
