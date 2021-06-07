@@ -1,9 +1,0 @@
-.desk-hidden {
-  display: flex;
-}
-
-@media screen and (min-width: 618px) {
-  .desk-hidden {
-    display: none;
-  }
-}
