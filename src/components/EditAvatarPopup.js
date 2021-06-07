@@ -47,7 +47,8 @@ function EditAvatarPopup({ isOpen, onClose, onUpdateAvatar, onClick }) {
             isDisabled={!isFormValid}
             onClick={onClick}
             title="Обновить аватар"
-            children={(<label className="popup__field">
+        >
+            <label className="popup__field">
                 <input
                     id="avatar-link"
                     type="url"
@@ -60,8 +61,7 @@ function EditAvatarPopup({ isOpen, onClose, onUpdateAvatar, onClick }) {
                     onChange={handleChange}
                 />
                 <span className={isValid ? " popup__input-error_avatar" : ""} id="avatar-link-error">{validationMessage}</span>
-            </label>)}
-        >
+            </label>
         </PopupWithForm>
     );
 }

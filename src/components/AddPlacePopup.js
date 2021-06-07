@@ -49,39 +49,40 @@ function AddPlacePopup({ onClick, onAddPlace, isOpen, onClose }) {
       isDisabled={!isFormValid}
       submitButtonText="Создать"
       onClick={onClick}
-      children={(<>
-        <label className="popup__field">
-          <input
-            className="popup__input popup__input_place"
-            type="text"
-            name="name"
-            id="place-name"
-            placeholder="Название"
-            required
-            minLength={2}
-            maxLength={30}
-            value={inputValue.name}
-            onChange={handleInputChange}
-
-          />
-          <span className={!isValid.name ? "popup__input-error popup__input-error_place" : ""} id="place-name-error">{validationMessage.name}</span>
-        </label>
-        <label className="popup__field">
-          <input
-            className="popup__input popup__input_image"
-            type="url"
-            name="link"
-            id="link-image"
-            placeholder="Ссылка на картинку"
-            required
-            value={inputValue.link}
-            onChange={handleInputChange}
-
-          />
-          <span className={!isValid.link ? "popup__input-error popup__input-error_image" : ""} id="link-image-error">{validationMessage.link}</span>
-        </label>
-      </>)}
     >
+
+      <label className="popup__field">
+        <input
+          className="popup__input popup__input_place"
+          type="text"
+          name="name"
+          id="place-name"
+          placeholder="Название"
+          required
+          minLength={2}
+          maxLength={30}
+          value={inputValue.name}
+          onChange={handleInputChange}
+
+        />
+        <span className={!isValid.name ? "popup__input-error popup__input-error_place" : ""} id="place-name-error">{validationMessage.name}</span>
+      </label>
+      <label className="popup__field">
+        <input
+          className="popup__input popup__input_image"
+          type="url"
+          name="link"
+          id="link-image"
+          placeholder="Ссылка на картинку"
+          required
+          value={inputValue.link}
+          onChange={handleInputChange}
+
+        />
+        <span className={!isValid.link ? "popup__input-error popup__input-error_image" : ""} id="link-image-error">{validationMessage.link}</span>
+      </label>
+
+
     </PopupWithForm>
   )
 }
